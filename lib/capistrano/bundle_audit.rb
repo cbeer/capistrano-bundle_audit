@@ -2,7 +2,6 @@ require "capistrano/bundle_audit/version"
 
 module Capistrano
   module BundleAudit
-    # Your code goes here...
   end
 end
 
