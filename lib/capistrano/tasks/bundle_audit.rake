@@ -24,5 +24,5 @@ namespace :deploy do
     end
   end
   
-  before 'deploy:starting', 'deploy:check:bundle_audit' 
+  after 'deploy:updating', 'deploy:check:bundle_audit'
 end
