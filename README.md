@@ -1,6 +1,6 @@
 # Capistrano::BundleAudit
 
-TODO: Write a gem description
+Audit your Gemfile for known vulnerabilies before releasing.
 
 ## Installation
 
@@ -14,13 +14,15 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
+Add this line to your `Capfile`:
 
-    $ gem install capistrano-bundle_audit
+```ruby
+require 'capistrano/bundle_audit'
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+After `deploy:updating` (and before the deployed code is released as the current version), `bundle-audit` will be run against the pushed code. If any vulnerabilities are discovered, the release will be aborted.
 
 ## Contributing
 
