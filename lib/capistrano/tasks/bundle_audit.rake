@@ -4,10 +4,10 @@ namespace :deploy do
   namespace :check do
     desc "Audit the Gemfile/Gemfile.lock for known vulnerabilities"
     task :bundle_audit do
-      on roles(:app) do |host|
+      on roles(:app), in: :sequence do |host|
 
         # Download the relevant files and run bundle-audit on them locally
-        Dir.mktmpdir do |dir| 
+        Dir.mktmpdir do |dir|
           Dir.chdir dir do
             download! "#{release_path}/Gemfile.lock", "Gemfile.lock"
             download! "#{release_path}/Gemfile", "Gemfile"
@@ -31,6 +31,6 @@ namespace :deploy do
       end
     end
   end
-  
+
   after 'deploy:updating', 'deploy:check:bundle_audit' unless ENV['SKIP_BUNDLE_AUDIT']
 end
