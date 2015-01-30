@@ -22,7 +22,10 @@ namespace :deploy do
               # bundle-audit includes failures for both gem vulnerabilities
               # and insecure gem sources, and offers no way to distinguish those cases.
               # unfortunately, we only want to fail when vulnerable gems are required.
-              if bundle_audit_output =~ /Name:/
+              # This should only fail if there is a bundle-audit output AND it has 
+              # a solution available to upgrade. If no solution is available deploy
+              # will still be allowed.
+              if bundle_audit_output =~ /Solution: upgrade to/
                 fail "Bundle audit failed; update your vulnerable dependencies before deploying"
               end
             end
