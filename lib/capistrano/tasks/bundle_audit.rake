@@ -1,3 +1,4 @@
+require 'shellwords'
 require 'tmpdir'
 
 namespace :deploy do
@@ -17,7 +18,7 @@ namespace :deploy do
               # Get the latest vulnerability information
               execute "bundle-audit update &> /dev/null"
 
-              bundle_audit_output = capture "bundle-audit"
+              bundle_audit_output = capture "bundle-audit #{"--ignore #{Shellwords.join(fetch(:bundle_audit_ignore))}" unless fetch(:bundle_audit_ignore).empty? }"
 
               # bundle-audit includes failures for both gem vulnerabilities
               # and insecure gem sources, and offers no way to distinguish those cases.
@@ -36,4 +37,11 @@ namespace :deploy do
   end
 
   after 'deploy:updating', 'deploy:check:bundle_audit' unless ENV['SKIP_BUNDLE_AUDIT']
+end
+
+namespace :load do
+  task :defaults do
+    set :bundle_audit_ignore, %W{#{ENV['BUNDLE_AUDIT_IGNORES']}}
+    set :skip_bundle_audit, !!ENV['SKIP_BUNDLE_AUDIT']
+  end
 end
