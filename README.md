@@ -24,6 +24,15 @@ require 'capistrano/bundle_audit'
 
 After `deploy:updating` (and before the deployed code is released as the current version), `bundle-audit` will be run against the pushed code. If any vulnerabilities are discovered, the release will be aborted.
 
+### Skipping auditing
+
+In some cases, it is impossible to update to secure versions of dependencies. In these cases, you can relax the audit by either:
+
+- setting the `SKIP_BUNDLE_AUDIT` environment variable before deploying (e.g. `SKIP_BUNDLE_AUDIT=true bundle exec cap production deploy`)
+- ignore specific vulnerabilities by setting the Capistrano variable `bundle_audit_ignore` in `config/deploy.rb` or similar (e.g. `set :bundle_audit_ignore, %w(CVE-123456)` to ignore the vulnerability reported in CVE-123456)
+
+
+
 ## Contributing
 
 1. Fork it ( https://github.com/[my-github-username]/capistrano-bundle_audit/fork )
