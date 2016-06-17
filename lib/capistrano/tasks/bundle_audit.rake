@@ -10,9 +10,11 @@ namespace :deploy do
         # Download the relevant files and run bundle-audit on them locally
         Dir.mktmpdir do |dir|
           Dir.chdir dir do
-            download! "#{release_path}/Gemfile.lock", "Gemfile.lock"
-            download! "#{release_path}/Gemfile", "Gemfile"
-
+            gem_files = capture(:ls, "#{release_path}/Gemfile*").split("\n")
+            gem_files.delete_if {|f| f.end_with? 'example' }
+            gem_files.each do |gemfile|
+              download! gemfile, File.split(gemfile).last
+            end
             run_locally do
 
               # Get the latest vulnerability information
