@@ -3,7 +3,7 @@ require 'tmpdir'
 
 namespace :deploy do
   namespace :check do
-    desc "Audit the Gemfile/Gemfile.lock for known vulnerabilities"
+    desc "Audit the Gemfile.lock for known vulnerabilities"
     task :bundle_audit do
       on roles(:app), in: :sequence do |host|
 
@@ -11,9 +11,9 @@ namespace :deploy do
         Dir.mktmpdir do |dir|
           Dir.chdir dir do
             download! "#{release_path}/Gemfile.lock", "Gemfile.lock"
-            download! "#{release_path}/Gemfile", "Gemfile"
 
             run_locally do
+              execute %(echo 'gem "bundler-audit"' > Gemfile)
 
               # Get the latest vulnerability information
               execute "bundle-audit update &> /dev/null"
