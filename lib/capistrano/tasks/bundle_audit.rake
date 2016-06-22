@@ -15,10 +15,9 @@ namespace :deploy do
             run_locally do
               execute %(echo 'gem "bundler-audit"' > Gemfile)
 
-              # Get the latest vulnerability information
-              execute "bundle-audit update &> /dev/null"
-
-              bundle_audit_output = capture "bundle-audit #{"--ignore #{Shellwords.join(fetch(:bundle_audit_ignore))}" unless fetch(:bundle_audit_ignore).empty? }"
+              bundle_audit_output = Bundler.with_clean_env do
+                capture "bundle-audit check --update #{"--ignore #{Shellwords.join(fetch(:bundle_audit_ignore))}" unless fetch(:bundle_audit_ignore).empty? }"
+              end
 
               # bundle-audit includes failures for both gem vulnerabilities
               # and insecure gem sources, and offers no way to distinguish those cases.
