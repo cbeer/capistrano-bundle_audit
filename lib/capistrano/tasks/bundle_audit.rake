@@ -13,7 +13,7 @@ namespace :deploy do
             download! "#{release_path}/Gemfile.lock", "Gemfile.lock"
 
             run_locally do
-              execute %(echo 'gem "bundler-audit"' > Gemfile)
+              capture %(echo 'gem "bundler-audit"' > Gemfile)
 
               bundle_audit_output = Bundler.with_clean_env do
                 capture "bundle-audit check --update #{"--ignore #{Shellwords.join(fetch(:bundle_audit_ignore))}" unless fetch(:bundle_audit_ignore).empty? }"
@@ -26,7 +26,11 @@ namespace :deploy do
               # a solution available to upgrade. If no solution is available deploy
               # will still be allowed.
               if bundle_audit_output =~ /Solution: upgrade to/
+                warn bundle_audit_output
                 fail "Bundle audit failed; update your vulnerable dependencies before deploying"
+              else
+                debug bundle_audit_output
+                info bundle_audit_output.split("\n").last
               end
             end
           end
