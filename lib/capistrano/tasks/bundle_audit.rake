@@ -41,7 +41,7 @@ namespace :deploy do
     end
   end
 
-  after 'deploy:bundle', 'deploy:check:bundle_audit' unless ENV['SKIP_BUNDLE_AUDIT']
+  after 'bundler:install', 'deploy:check:bundle_audit' unless ENV['SKIP_BUNDLE_AUDIT']
 end
 
 namespace :load do
