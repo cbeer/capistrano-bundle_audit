@@ -7,7 +7,7 @@ namespace :deploy do
     desc "Audit the Gemfile.lock for known vulnerabilities"
     task :bundle_audit do
 
-      on roles(:app), in: :sequence do |host|
+      on primary(:app), in: :sequence do |host|
 
         # Download the relevant files and run bundle-audit on them locally
         Dir.mktmpdir do |dir|
@@ -24,7 +24,7 @@ namespace :deploy do
               # bundle-audit includes failures for both gem vulnerabilities
               # and insecure gem sources, and offers no way to distinguish those cases.
               # unfortunately, we only want to fail when vulnerable gems are required.
-              # This should only fail if there is a bundle-audit output AND it has 
+              # This should only fail if there is a bundle-audit output AND it has
               # a solution available to upgrade. If no solution is available deploy
               # will still be allowed.
               if bundle_audit_output =~ /Solution: upgrade to/
