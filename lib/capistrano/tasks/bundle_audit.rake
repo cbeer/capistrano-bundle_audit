@@ -18,7 +18,7 @@ namespace :deploy do
               capture %(echo 'gem "bundler-audit"' > Gemfile)
 
               bundle_audit_output = Bundler.with_clean_env do
-                capture "bundle-audit check --update #{"--ignore #{Shellwords.join(fetch(:bundle_audit_ignore))}" unless fetch(:bundle_audit_ignore).empty? }"
+                capture "bundle exec bundle-audit check --update #{"--ignore #{Shellwords.join(fetch(:bundle_audit_ignore))}" unless fetch(:bundle_audit_ignore).empty? }"
               end
 
               # bundle-audit includes failures for both gem vulnerabilities
